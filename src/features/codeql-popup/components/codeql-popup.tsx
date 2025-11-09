@@ -3,6 +3,7 @@ import { ErrorOutline } from "@mui/icons-material";
 import VulnerabilityHeader from "./vulnerability-header";
 import type { SecurityMessage } from "../types/security-message";
 import BranchTag from "../../branch-tag/components/branch-tag";
+import { useState } from "react";
 
 interface Props {
   message: SecurityMessage;
@@ -10,6 +11,16 @@ interface Props {
 }
 
 export default function CodeQlPopup(props: Props) {
+  const [isDismissing, setIsDismissing] = useState(false);
+
+  const handleDismiss = () => {
+    setIsDismissing(true);
+    setTimeout(() => {
+      setIsDismissing(false);
+      props.onDismiss();
+    }, 300); // Match the animation duration
+  };
+
   return (
     <Box
       sx={{
@@ -18,6 +29,8 @@ export default function CodeQlPopup(props: Props) {
         background: "#151b23",
         border: "1px solid grey",
         borderRadius: "20px",
+        transform: isDismissing ? "scale(0)" : "scale(1)",
+        transition: "transform 0.3s ease-in-out",
       }}
     >
       <Stack direction="row" justifyContent="space-between">
@@ -30,14 +43,20 @@ export default function CodeQlPopup(props: Props) {
             textAlign: "left",
           }}
         >
-          <VulnerabilityHeader title={props.message.title} />
-          <Typography sx={{ color: "grey" }}>
+          <VulnerabilityHeader message={props.message} />
+          <Typography sx={{ color: "grey", fontSize: "14px" }}>
             {props.message.description}
+          </Typography>
+          <Typography sx={{ color: "grey", fontSize: "14px" }}>
+            Detected by CodeQL in{" "}
+            <strong>
+              <span style={{ color: "#b0b0b0" }}>{props.message.source}</span>
+            </strong>
           </Typography>
         </Stack>
         <Stack spacing="10px" justifyContent="space-between">
           <BranchTag>master</BranchTag>
-          <Button variant="contained" color="error" onClick={props.onDismiss}>
+          <Button variant="contained" color="error" onClick={handleDismiss}>
             Dismiss
           </Button>
         </Stack>
