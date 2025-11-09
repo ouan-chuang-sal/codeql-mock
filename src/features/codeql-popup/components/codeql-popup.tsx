@@ -48,7 +48,7 @@ export default function CodeQlPopup(props: Props) {
             {props.message.description}
           </Typography>
           <Typography sx={{ color: "grey", fontSize: "14px" }}>
-            Detected by CodeQL in{" "}
+            • Detected by CodeQL in{" "}
             <strong>
               <span style={{ color: "#b0b0b0" }}>{props.message.source}</span>
             </strong>
